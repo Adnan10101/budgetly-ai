@@ -1,4 +1,7 @@
-import src.notion_client as notion_client
+from src import (
+    notion_client,
+    llm
+)
 
 def setup_bot(bot):
     @bot.event
@@ -7,8 +10,16 @@ def setup_bot(bot):
 
     @bot.command()
     async def budget(ctx):
-        a = notion_client.results()
-        #print(a.keys())
-        print(a)
-        await ctx.send("lol")
-       
+        user_input_text = ctx.message.content[len("$$budget "):] 
+        try:
+            content = llm.extract_data(user_input_text)
+            print("::::::::::",content)
+            notion_client.insert_data(content["category_name"], content["name"],content["amount"], content["date"])
+            await ctx.send("Successfully added!")
+        except Exception as e:
+            await ctx.send(f"Error:{e}")
+        
+      
+        
+
+

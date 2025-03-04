@@ -19,11 +19,11 @@ def call_llm(prompt, max_tokens=200):
     try:
         response = requests.post(API_URL, headers=HEADERS, data=json.dumps(payload))
         response.raise_for_status()
-        print(f"Status Code: {response.status_code}")
+        #print(f"Status Code: {response.status_code}")
         #print(f"Raw Response: {response.text}")
 
         data = response.json()
-        print(data["choices"][0]["message"]["content"])
+        #print(data["choices"][0]["message"]["content"])
         return data["choices"][0]["message"]["content"]
     except requests.RequestException as e:
         print(f"DeepSeek API error: {str(e)}")
@@ -33,7 +33,7 @@ def extract_data(text):
     today = datetime.today().strftime("%Y-%m-%d")
     yesterday = (datetime.today() - timedelta(days=1)).strftime("%Y-%m-%d")
 
-    p = f"""
+    template = f"""
     You are an expert finance tracker. Given a financial transaction statement in natural language, extract the following key details:
     - **Category Name**: The type of expense (e.g., groceries, shopping, food, etc.).
     - **Name**: The store or entity where the transaction happened.
@@ -41,21 +41,36 @@ def extract_data(text):
     - **Date**: The date of the transaction (if relative like 'yesterday', convert it to YYYY-MM-DD format).
 
     **Response Format:**  
-    Provide the extracted details as a JSON object like this:
+    Provide the extracted details as a JSON dict object like this:
     {{
       "category_name": "<category>",
       "name": "<store>",
       "amount": <amount>,
       "date": "<YYYY-MM-DD>"
     }}
-
+    Remember to extract the category only from the following set below in the right format
+    -   New Category
+    -   Housing
+    -   Travel 
+    -   home
+    -   Charity
+    -   Food
+    -   Groceries
+    -   Rent
+    -   Shopping
+    -   Education
+    -   Health & Wellness
+    -   Transport
+    -   Utilities
+    -   Entertainments
+    
     ### **Examples:**
     #### Example 1:
     **Input:**  
     "add 100$ worth of groceries for today from walmart."
     **Output:**  
     {{
-      "category_name": "groceries",
+      "category_name": "Groceries",
       "name": "walmart",
       "amount": 100,
       "date": "{today}"
@@ -66,7 +81,7 @@ def extract_data(text):
     "purchase of 50$ on shopping in amazon on 24th feb 2025."
     **Output:**  
     {{
-      "category_name": "shopping",
+      "category_name": "Shopping",
       "name": "amazon",
       "amount": 50,
       "date": "2025-02-24"
@@ -77,7 +92,7 @@ def extract_data(text):
     "i bought 70$ worth of food yesterday at osmos."
     **Output:**  
     {{
-      "category_name": "food",
+      "category_name": "Food",
       "name": "osmos",
       "amount": 70,
       "date": "{yesterday}"
@@ -87,7 +102,10 @@ def extract_data(text):
     "{text}"
     """
 
-    response = call_llm(p)
+    response = call_llm(template)
+    cleaned_response = response.replace("json", "", 1).replace("```","",2).strip()
+    response_dict = json.loads(cleaned_response)
+    return response_dict
     
     # if response:
     #     try:
