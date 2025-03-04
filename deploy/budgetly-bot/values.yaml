@@ -1,0 +1,11 @@
+deployment:
+    name: budgetly-ai
+    app: budgetly-ai-app
+    replicas: 1
+    image: adnan10101/budget-ai
+    tag: test1
+
+service:
+    name: budgetly-ai
+    port: 6002
+    nodePort: 32178

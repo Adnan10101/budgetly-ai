@@ -1,51 +1,10 @@
 from notion_client import Client
 import os
 import sys
-import openai
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
 
 from src.utils.config import NOTION_DATABASE_ID, NOTION_API
-from pinecone.grpc import PineconeGRPC as Pinecone
-from pinecone import ServerlessSpec
 import time
-
-# def insert_data(data):
-#     for item in data:
-#         text = item['properties']['Name']['title'][0]['text']['content']
-#         embedding = openai.Embedding.create(input=text, model='text-embedding-ada-002')['data'][0]['embedding']
-        
-#         # Create a Vector object
-#         vector = Vector(
-#             id=item['id'],
-#             data=embedding,
-#             metadata={'notion_data': item}
-#         )
-    
-#     # Upsert the vector into Upstash Vector database
-#     index.upsert(vectors=[vector])
-#     index = Index(url="https://close-crane-72333-us1-vector.upstash.io", token="ABUFMGNsb3NlLWNyYW5lLTcyMzMzLXVzMWFkbWluWTJReU9XRm1NR0V0TTJJd09TMDBZVEV6TFdGaFpEZ3RZalJrT0RVeE1qRTNaakF6")
-#     index.upsert(
-#     vectors=[
-#         Vector(
-#         id="id1",
-#         data="Enter data as string",
-#         metadata={"metadata_field": "metadata_value"},
-#         )
-#     ]
-#     )
-
-
-
-# def query(index):
-#     index.query(
-#         data="Enter data as string",
-#         top_k=1,
-#         include_vectors=True,
-#         include_metadata=True,
-#     )
-
-
-
 
 def test():
     notion_client = Client(auth =  NOTION_API)
@@ -88,14 +47,4 @@ def insert_data(category_name, name, amount, date):
         }
     )
 
-
-# for row in rows['results']:
-#     user_id = safe_get(row, 'properties.Name.title.0.plain_text')
-#     date = safe_get(row, 'properties.Date.date.start')
-#     event = safe_get(row, 'properties.Event.select.name')
-
-#     simple_rows.append({
-#         'user_id': user_id,
-#         'date': date,
-#         'event': event
-#     })
+# TDOD: ADD A DELETE FEATURE AS WELL IN THE FUTURE
