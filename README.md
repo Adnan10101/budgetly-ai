@@ -1,5 +1,5 @@
 # budgetly-ai
-A simple AI based approach to be able to track and analyse my expenses.
+A simple AI based approach to be able to track and analyse my expenses.mad
 
 Usecases: 
 <TODO>
